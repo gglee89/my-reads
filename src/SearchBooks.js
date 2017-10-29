@@ -52,6 +52,7 @@ class SearchBooks extends Component {
               <li key={book.id}>
                 <Book
                   title={book.title}
+                  shelf={book.shelf}
                   authors={book.authors}
                   thumbnail={book.imageLinks.smallThumbnail}
                 />

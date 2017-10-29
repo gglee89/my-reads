@@ -12,7 +12,6 @@ class ListBooks extends Component {
 
   componentDidMount() {
     BooksAPI.getAll().then(books => {
-      console.log(books);
       this.setState({
         currentlyReading: books.filter(
           book => book.shelf === "currentlyReading"

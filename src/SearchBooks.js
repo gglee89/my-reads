@@ -11,10 +11,15 @@ class SearchBooks extends Component {
 
   componenetDidMount() {
     // https://stackoverflow.com/questions/41121667/reactjs-how-to-pass-values-from-child-component-to-grand-parent-component#
-    // Passing callback to grandchild component
+    // Needed when passing a callback to grandchild component.
+    // Binds the parent context.
     this.handleOnUpdateBookShelf = this.handleOnUpdateBookShelf.bind(this);
   }
 
+  /**
+   * @description Handles the query response to the state
+   * @param {string} query
+   */
   handleQuery(query) {
     this.setState({
       query

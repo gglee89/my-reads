@@ -22,10 +22,16 @@ class ListBooks extends Component {
     });
 
     // https://stackoverflow.com/questions/41121667/reactjs-how-to-pass-values-from-child-component-to-grand-parent-component#
-    // Passing callback to grandchild component
+    // Needed when passing a callback to grandchild component.
+    // Binds the parent context
     this.onUpdateBookSHelf = this.onUpdateBookSHelf.bind(this);
   }
 
+  /**
+   * @description Handles the book's shelf update
+   * @param {obj} book
+   * @param {string} shelf
+   */
   onUpdateBookSHelf(book, shelf) {
     /* console.log("Book", book);
     console.log("new shelf", shelf); */
@@ -73,7 +79,7 @@ class ListBooks extends Component {
           : state.read
     }));
 
-    // Update API
+    // Update the book shelf in the API
     BooksAPI.update(book, shelf);
   }
 

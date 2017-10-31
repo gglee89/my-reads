@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class Book extends Component {
   render() {
-    const { book, updateBookShelf, isSearch } = this.props;
+    const { book, updateBookShelf } = this.props;
 
     return (
       <div className="book">
@@ -18,7 +18,7 @@ class Book extends Component {
           <div className="book-shelf-changer">
             <select
               onChange={event => updateBookShelf(book, event.target.value)}
-              value={!isSearch ? book.shelf : "none"}
+              value={book.shelf}
             >
               <option value="none" disabled>
                 Move to...

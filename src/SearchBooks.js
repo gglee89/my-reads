@@ -6,7 +6,6 @@ import Book from "./Book";
 class SearchBooks extends Component {
   state = {
     query: "",
-    notification: "",
     books: []
   };
 
@@ -41,14 +40,8 @@ class SearchBooks extends Component {
   }
 
   handleOnUpdateBookShelf(book, shelf) {
-    /* console.log("Book", book);
-    console.log("Shelf", shelf); */
-
-    BooksAPI.update(book, shelf).then(() => {
-      /* this.setState({
-        notification: book.title + " added to " + shelf + " shelf."
-      }); */
-      console.log("updated successfully");
+    BooksAPI.get(book.id).then(book => {
+      BooksAPI.update(book, shelf);
     });
   }
 
@@ -77,9 +70,6 @@ class SearchBooks extends Component {
             />
           </div>
         </div>
-        <div className="search-books-notification">
-          <p>{this.state.notification}</p>
-        </div>
         <div className="search-books-results">
           <ol className="books-grid">
             {!this.state.books.hasOwnProperty("error") ? (
@@ -87,7 +77,6 @@ class SearchBooks extends Component {
                 <li key={book.id}>
                   <Book
                     book={book}
-                    isSearch={true}
                     updateBookShelf={this.handleOnUpdateBookShelf}
                   />
                 </li>

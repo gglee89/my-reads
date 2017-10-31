@@ -21,6 +21,8 @@ class ListBooks extends Component {
       });
     });
 
+    // https://stackoverflow.com/questions/41121667/reactjs-how-to-pass-values-from-child-component-to-grand-parent-component#
+    // Passing callback to grandchild component
     this.onUpdateBookSHelf = this.onUpdateBookSHelf.bind(this);
   }
 

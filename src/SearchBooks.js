@@ -6,18 +6,49 @@ import Book from "./Book";
 class SearchBooks extends Component {
   state = {
     query: "",
+    notification: "",
     books: []
   };
+
+  componenetDidMount() {
+    // https://stackoverflow.com/questions/41121667/reactjs-how-to-pass-values-from-child-component-to-grand-parent-component#
+    // Passing callback to grandchild component
+    this.handleOnUpdateBookShelf = this.handleOnUpdateBookShelf.bind(this);
+  }
 
   handleQuery(query) {
     this.setState({
       query
     });
 
-    BooksAPI.search(query).then(books => {
+    if (query !== "") {
+      BooksAPI.search(query)
+        .then(books => {
+          this.setState({
+            books
+          });
+        })
+        .catch(err => {
+          this.setState({
+            books: []
+          });
+        });
+    } else {
       this.setState({
-        books
+        books: []
       });
+    }
+  }
+
+  handleOnUpdateBookShelf(book, shelf) {
+    /* console.log("Book", book);
+    console.log("Shelf", shelf); */
+
+    BooksAPI.update(book, shelf).then(() => {
+      /* this.setState({
+        notification: book.title + " added to " + shelf + " shelf."
+      }); */
+      console.log("updated successfully");
     });
   }
 
@@ -46,13 +77,24 @@ class SearchBooks extends Component {
             />
           </div>
         </div>
+        <div className="search-books-notification">
+          <p>{this.state.notification}</p>
+        </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.books.map(book => (
-              <li key={book.id}>
-                <Book book={book} />
-              </li>
-            ))}
+            {!this.state.books.hasOwnProperty("error") ? (
+              this.state.books.map(book => (
+                <li key={book.id}>
+                  <Book
+                    book={book}
+                    isSearch={true}
+                    updateBookShelf={this.handleOnUpdateBookShelf}
+                  />
+                </li>
+              ))
+            ) : (
+              <li />
+            )}
           </ol>
         </div>
       </div>

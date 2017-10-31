@@ -20,6 +20,56 @@ class ListBooks extends Component {
         read: books.filter(book => book.shelf === "read")
       });
     });
+
+    this.onUpdateBookSHelf = this.onUpdateBookSHelf.bind(this);
+  }
+
+  onUpdateBookSHelf(book, shelf) {
+    /* console.log("Book", book);
+    console.log("new shelf", shelf); */
+
+    let currentlyReading = "currentlyReading";
+    let wantToRead = "wantToRead";
+    let read = "read";
+
+    // Remove book from its current shelf
+    this.setState(state => ({
+      currentlyReading:
+        book.shelf === currentlyReading
+          ? state.currentlyReading.filter(currentlyReadingBook => {
+              return currentlyReadingBook.title !== book.title;
+            })
+          : state.currentlyReading,
+      wantToRead:
+        book.shelf === wantToRead
+          ? state.wantToRead.filter(wantToReadBook => {
+              return wantToReadBook.title !== book.title;
+            })
+          : state.wantToRead,
+      read:
+        book.shelf === read
+          ? state.read.filter(readBook => {
+              return readBook.title !== book.title;
+            })
+          : state.read
+    }));
+
+    // Move book to a different shelf
+    this.setState(state => ({
+      currentlyReading:
+        shelf === currentlyReading
+          ? ((book.shelf = currentlyReading),
+            state.currentlyReading.concat(book))
+          : state.currentlyReading,
+      wantToRead:
+        shelf === wantToRead
+          ? ((book.shelf = wantToRead), state.wantToRead.concat(book))
+          : state.wantToRead,
+      read:
+        shelf === read
+          ? ((book.shelf = read), state.read.concat(book))
+          : state.read
+    }));
   }
 
   render() {
@@ -33,9 +83,18 @@ class ListBooks extends Component {
             <BookShelf
               title="Currently Reading"
               books={this.state.currentlyReading}
+              handleOnUpdateBookShelf={this.onUpdateBookSHelf}
             />
-            <BookShelf title="Want to Read" books={this.state.wantToRead} />
-            <BookShelf title="Read" books={this.state.read} />
+            <BookShelf
+              title="Want to Read"
+              books={this.state.wantToRead}
+              handleOnUpdateBookShelf={this.onUpdateBookSHelf}
+            />
+            <BookShelf
+              title="Read"
+              books={this.state.read}
+              handleOnUpdateBookShelf={this.onUpdateBookSHelf}
+            />
           </div>
         </div>
         <div className="open-search">

@@ -70,6 +70,9 @@ class ListBooks extends Component {
           ? ((book.shelf = read), state.read.concat(book))
           : state.read
     }));
+
+    // Update API
+    BooksAPI.update(book, shelf);
   }
 
   render() {

@@ -4,16 +4,45 @@ import * as BooksAPI from "./BooksAPI";
 import Book from "./Book";
 
 class SearchBooks extends Component {
-  state = {
-    query: "",
-    books: []
-  };
+  constructor(props) {
+    super(props);
 
-  componenetDidMount() {
-    // https://stackoverflow.com/questions/41121667/reactjs-how-to-pass-values-from-child-component-to-grand-parent-component#
-    // Needed when passing a callback to grandchild component.
-    // Binds the parent context.
+    this.state = {
+      books_in_shelf: [],
+      books: [],
+      query: ""
+    };
+
     this.handleOnUpdateBookShelf = this.handleOnUpdateBookShelf.bind(this);
+    this.compareAndReplace = this.compareAndReplace.bind(this);
+  }
+
+  componentDidMount() {
+    BooksAPI.getAll().then(books => {
+      this.setState({
+        books_in_shelf: books
+      });
+    });
+  }
+
+  /**
+   * @description Compare and replace the book shelf from the search result with the books already updated with a shelf.
+   * @param {*} books
+   */
+  compareAndReplace(books) {
+    books.map(book => {
+      this.state.books_in_shelf.map(book_in_shelf => {
+        if (book.id === book_in_shelf.id) {
+          book["shelf"] = book_in_shelf.shelf;
+        }
+      });
+    });
+
+    this.setState({
+      books
+    });
+
+    /* console.log(books); */
   }
 
   /**
@@ -25,22 +54,18 @@ class SearchBooks extends Component {
       query
     });
 
-    if (query !== "") {
-      BooksAPI.search(query)
-        .then(books => {
-          this.setState({
-            books
-          });
-        })
-        .catch(err => {
-          this.setState({
-            books: []
-          });
-        });
-    } else {
+    const resetQuery = () => {
       this.setState({
         books: []
       });
+    };
+
+    if (query !== "") {
+      BooksAPI.search(query)
+        .then(this.compareAndReplace)
+        .catch(err => resetQuery());
+    } else {
+      resetQuery();
     }
   }
 
@@ -77,18 +102,14 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {!this.state.books.hasOwnProperty("error") ? (
-              this.state.books.map(book => (
-                <li key={book.id}>
-                  <Book
-                    book={book}
-                    updateBookShelf={this.handleOnUpdateBookShelf}
-                  />
-                </li>
-              ))
-            ) : (
-              <li />
-            )}
+            {this.state.books.map(book => (
+              <li key={book.id}>
+                <Book
+                  book={book}
+                  updateBookShelf={this.handleOnUpdateBookShelf}
+                />
+              </li>
+            ))}
           </ol>
         </div>
       </div>
